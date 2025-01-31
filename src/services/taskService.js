@@ -1,8 +1,8 @@
-import { API_URL,HEADER_BASIC } from '../config/config'
+import { API_URL, HEADER_BASIC } from '../config/config'
 
-const PATH_URL = "/users"
+const PATH_URL = "/task";
 
-export const getUsers = async () => {
+export const getAllTask = async () => {
     const options = {
         headers: HEADER_BASIC,
         method: 'get',        
@@ -16,16 +16,14 @@ export const getUsers = async () => {
             return json;
             
         })
-
     return resp;
-    
 }
 
-export const saveUser = async (updatedUser) => {
+export const saveTask = async (updated) => {
     const options = {
         headers: HEADER_BASIC,
         method: 'POST',
-        body: JSON.stringify(updatedUser)        
+        body: JSON.stringify(updated)        
     };
     const resp = await fetch(`${API_URL+PATH_URL}`, options ).
         then( result =>{
@@ -36,13 +34,11 @@ export const saveUser = async (updatedUser) => {
             return json;
             
         })
-
     return resp;
-    
 }
 
-export const deleteUser = async(id)=>{
-const options = {
+export const deleteTask = async (id) => {
+    const options = {
         headers: HEADER_BASIC,
         method: 'DELETE'
     };
@@ -57,5 +53,3 @@ const options = {
         })
     return resp;
 }
-
-

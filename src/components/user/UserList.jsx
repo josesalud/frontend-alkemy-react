@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { getUsers, saveUser } from '../../services/userService'
+import { getUsers, saveUser, deleteUser } from '../../services/userService'
 import { UserItem } from './UserItem'
 import { AddUser } from "./AddUser";
+import Swal from 'sweetalert2';
 
 export const UserList = () => {
 	const [users, setUsers] = useState([]);
@@ -26,8 +27,21 @@ export const UserList = () => {
 		setUsers([...users, newUser]);
 	};
 
-	const deleteUser = (id) => {
-		setUsers(users.filter((user) => user.id !== id));
+	const removeUser = (id) => {
+		Swal.fire({
+            title: '¿Estás seguro?',
+            text: '¡Esta acción no se puede deshacer!',
+            icon: 'warning',
+            showCancelButton: true,  // Muestra el botón de cancelar
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+        }).then( async (result) => {
+            if (result.isConfirmed) {
+				setUsers(users.filter((user) => user.id !== id));
+                const remov = await deleteUser(id);
+                console.log(remov);
+            }
+        });
 	};
 
 	const editUser = async (updatedUser) => {
@@ -49,7 +63,7 @@ export const UserList = () => {
 				</h1>
 				<div className="grid grid-cols-1 gap-4">
 					
-					<AddUser	addUser={addUser}	/>
+					<AddUser addUser={addUser}	/>
 					
 				</div>
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -57,7 +71,7 @@ export const UserList = () => {
 							<UserItem
 								key={user.id}
 								user={user}
-								deleteUser={deleteUser}
+								deleteUser={removeUser}
 								editUser={editUser}
 							/>
 						))
